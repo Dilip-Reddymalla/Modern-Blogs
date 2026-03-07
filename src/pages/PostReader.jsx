@@ -107,7 +107,7 @@ const PostReader = () => {
     const handleDeleteComment = async (commentId) => {
         if (!window.confirm("Are you sure you want to delete this comment?")) return;
         try {
-            const res = await api.patch(`/interaction/${post._id}/deleteComment/${commentId}`);
+            const res = await api.delete(`/interaction/${post._id}/deleteComment/${commentId}`);
             if (res.status === 200) {
                 if (res.data.comments) {
                     setPost(prev => ({ ...prev, comments: res.data.comments }));
