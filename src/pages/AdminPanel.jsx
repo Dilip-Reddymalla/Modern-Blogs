@@ -74,7 +74,7 @@ const AdminPanel = () => {
 
   const handleApprove = async (id) => {
     try {
-      await api.patch(`/auth/make-admin/${id}`);
+      await api.patch(`/auth/approve/${id}`);
       setPendingPosts(pendingPosts.filter((p) => p._id !== id));
       toast.success("Article approved successfully!");
       // Update stats
@@ -117,7 +117,7 @@ const AdminPanel = () => {
     if (!window.confirm("Are you sure you want to promote this user to Admin?"))
       return;
     try {
-      await api.patch(`/admin/make/${userId}`);
+      await api.patch(`/auth/make-admin/${userId}`);
       setUsersList(
         usersList.map((u) => (u._id === userId ? { ...u, role: "admin" } : u)),
       );
