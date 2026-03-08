@@ -70,11 +70,11 @@ const AdminPanel = () => {
     if (activeTab === "users" && usersList.length === 0) {
       fetchUsers();
     }
-  }, [activeTab]);
+  }, [activeTab, usersList.length]);
 
   const handleApprove = async (id) => {
     try {
-      await api.patch(`/auth/approve/${id}`);
+      await api.patch(`/admin/approve/${id}`);
       setPendingPosts(pendingPosts.filter((p) => p._id !== id));
       toast.success("Article approved successfully!");
       // Update stats

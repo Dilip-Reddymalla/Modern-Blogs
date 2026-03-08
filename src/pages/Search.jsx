@@ -130,7 +130,7 @@ const Search = () => {
             ) : hasSearched ? (
                 <div>
                     <div style={{ marginBottom: '2rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                        <h2 style={{ fontSize: '1.5rem', fontWeight: 700 }}>Results for {searchType === 'tag' ? '#' : ''}"{currentQuery}"</h2>
+                        <h2 style={{ fontSize: '1.5rem', fontWeight: 700 }}>Results for {searchType === 'tag' ? '#' : ''}&quot;{currentQuery}&quot;</h2>
                         <span style={{ color: 'var(--color-text-muted)' }}>{results.length} articles found</span>
                     </div>
 

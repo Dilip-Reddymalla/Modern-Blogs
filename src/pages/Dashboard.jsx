@@ -5,6 +5,7 @@ import { useAuth } from '../context/AuthContext';
 import { motion, AnimatePresence } from 'framer-motion';
 import toast from 'react-hot-toast';
 import api from '../api/axios';
+import { Skeleton, SkeletonPostCard } from '../components/ui/Skeleton';
 
 const Dashboard = () => {
     const { user } = useAuth();
@@ -33,6 +34,49 @@ const Dashboard = () => {
 
     if (!user) {
         return <Navigate to="/login" replace />;
+    }
+
+    if (isLoading) {
+        return (
+            <div className="container" style={{ paddingTop: '4rem', paddingBottom: '6rem' }}>
+                {/* Dashboard Header Skeleton */}
+                <header style={{ display: 'flex', flexWrap: 'wrap', gap: '2rem', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '4rem' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
+                        <Skeleton width="80px" height="80px" borderRadius="50%" />
+                        <div>
+                            <Skeleton height="40px" width="300px" />
+                            <Skeleton height="20px" width="250px" />
+                        </div>
+                    </div>
+                    <Skeleton height="40px" width="120px" />
+                </header>
+
+                {/* Stats Grid Skeleton */}
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1.5rem', marginBottom: '4rem' }}>
+                    <Skeleton height="100px" borderRadius="1.5rem" />
+                    <Skeleton height="100px" borderRadius="1.5rem" />
+                    <Skeleton height="100px" borderRadius="1.5rem" />
+                </div>
+
+                {/* Content Section Skeleton */}
+                <div>
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: '1px solid rgba(255,255,255,0.1)', paddingBottom: '1rem', marginBottom: '2rem' }}>
+                        <Skeleton height="30px" width="150px" />
+                        <div style={{ display: 'flex', gap: '1rem' }}>
+                            <Skeleton height="20px" width="40px" />
+                            <Skeleton height="20px" width="70px" />
+                            <Skeleton height="20px" width="60px" />
+                        </div>
+                    </div>
+
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                        <SkeletonPostCard />
+                        <SkeletonPostCard />
+                        <SkeletonPostCard />
+                    </div>
+                </div>
+            </div>
+        );
     }
 
     const approvedPosts = userPosts.filter(p => p.approvalStatus === 'approved');
@@ -179,7 +223,7 @@ const Dashboard = () => {
                                 initial={{ opacity: 0 }} animate={{ opacity: 1 }}
                                 style={{ textAlign: 'center', padding: '4rem 0', color: 'var(--color-text-muted)' }}
                             >
-                                You haven't written any articles in this category.
+                                You haven&apos;t written any articles in this category.
                             </motion.div>
                         )}
                     </AnimatePresence>
