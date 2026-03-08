@@ -46,7 +46,7 @@ const AdminPanel = () => {
       }
     };
 
-    if (user?.role === "admin") {
+    if (user?.role === "admin" || user?.role === "owner") {
       fetchAdminData();
     } else {
       setIsLoading(false);
@@ -128,6 +128,21 @@ const AdminPanel = () => {
     }
   };
 
+  const handleRemoveAdmin = async (userId) => {
+    if (!window.confirm("Are you sure you want to remove admin privileges from this user?"))
+      return;
+    try {
+      await api.patch(`/auth/remove-admin/${userId}`);
+      setUsersList(
+        usersList.map((u) => (u._id === userId ? { ...u, role: "user" } : u)),
+      );
+      toast.success("Admin access removed successfully!");
+    } catch (err) {
+      console.error("Failed to remove admin:", err);
+      toast.error(err.response?.data?.message || "Failed to remove admin");
+    }
+  };
+
   const handleToggleBan = async (userId, currentStatus) => {
     const action = currentStatus === "banned" ? "unban" : "ban";
     if (!window.confirm(`Are you sure you want to ${action} this user?`))
@@ -152,7 +167,7 @@ const AdminPanel = () => {
     }
   };
 
-  if (!user || user.role !== "admin") {
+  if (!user || (user.role !== "admin" && user.role !== "owner")) {
     return (
       <div
         className="container"
@@ -218,7 +233,7 @@ const AdminPanel = () => {
             border: "1px solid var(--glass-border)",
           }}
         >
-          <ShieldCheck size={32} style={{ color: "var(--color-primary)" }} />
+          <ShieldCheck size={32} style={{ color: user?.role === "owner" ? "#a855f7" : "var(--color-primary)" }} />
         </div>
         <div>
           <h1
@@ -226,9 +241,13 @@ const AdminPanel = () => {
               fontSize: "2.5rem",
               fontWeight: 800,
               marginBottom: "0.25rem",
+              background: user?.role === "owner" ? "linear-gradient(135deg, #c084f5 0%, #a855f7 100%)" : "none",
+              WebkitBackgroundClip: user?.role === "owner" ? "text" : "border-box",
+              WebkitTextFillColor: user?.role === "owner" ? "transparent" : "inherit",
+              color: user?.role === "owner" ? "transparent" : "inherit",
             }}
           >
-            Admin Dashboard
+            {user?.role === "owner" ? "Owner Dashboard" : "Admin Dashboard"}
           </h1>
           <p style={{ color: "var(--color-text-muted)", fontSize: "1.25rem" }}>
             Review system metrics and manage content and users.
@@ -669,6 +688,13 @@ const AdminPanel = () => {
                         }}
                       >
                         {usr.username}
+                        {usr.role === "owner" && (
+                          <Crown
+                            size={14}
+                            style={{ color: "#a855f7" }}
+                            title="Owner"
+                          />
+                        )}
                         {usr.role === "admin" && (
                           <Crown
                             size={14}
@@ -691,7 +717,7 @@ const AdminPanel = () => {
                   <div
                     style={{ display: "flex", gap: "0.5rem", marginTop: "auto" }}
                   >
-                    {usr.role !== "admin" && (
+                    {usr.role === "user" && (
                       <Button
                         variant="outline"
                         size="sm"
@@ -702,7 +728,17 @@ const AdminPanel = () => {
                         Admin
                       </Button>
                     )}
-                    {usr._id !== user._id && (
+                    {user?.role === "owner" && usr.role === "admin" && (
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handleRemoveAdmin(usr._id)}
+                        style={{ flex: 1, fontSize: "0.8rem", padding: "0.5rem", color: "#f97316", borderColor: "#f97316" }}
+                      >
+                        <UserX size={14} style={{ marginRight: "4px" }} /> Remove Admin
+                      </Button>
+                    )}
+                    {usr._id !== user._id && usr.role !== "owner" && (
                       <Button
                         variant={usr.status === "banned" ? "primary" : "outline"}
                         size="sm"

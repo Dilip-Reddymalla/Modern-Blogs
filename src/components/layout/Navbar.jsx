@@ -24,12 +24,12 @@ const Navbar = () => {
     }, [location.pathname]);
 
     return (
-        <motion.header 
+        <motion.header
             initial={{ y: -100 }}
             animate={{ y: 0 }}
             transition={{ type: 'spring', stiffness: 100, damping: 20 }}
-            style={{ 
-                position: 'sticky', top: 0, zIndex: 50, 
+            style={{
+                position: 'sticky', top: 0, zIndex: 50,
                 transition: 'all 0.3s ease',
                 background: isScrolled ? 'var(--glass-bg)' : 'transparent',
                 backdropFilter: isScrolled ? 'var(--glass-blur)' : 'none',
@@ -40,7 +40,7 @@ const Navbar = () => {
         >
             <div className="container" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: '4rem' }}>
                 {/* Logo */}
-                <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem',  fontWeight: 700, fontSize: '1.25rem' }}>
+                <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontWeight: 700, fontSize: '1.25rem' }}>
                     <Feather size={24} color="var(--color-primary)" />
                     <span className="text-gradient">ModernBlog</span>
                 </Link>
@@ -58,8 +58,8 @@ const Navbar = () => {
                     {user ? (
                         <>
                             <Link to="/create-post" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontWeight: 500 }}><PenSquare size={18} /> Write</Link>
-                            {user.role === 'admin' && (
-                                <Link to="/admin" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontWeight: 500, color: '#22c55e' }}>Admin</Link>
+                            {(user.role === 'admin' || user.role === 'owner') && (
+                                <Link to="/admin" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontWeight: 500, color: user.role === 'owner' ? '#a855f7' : '#22c55e' }}>{user.role === 'owner' ? 'Owner' : 'Admin'}</Link>
                             )}
                             <div style={{ width: '1px', height: '24px', background: 'rgba(255,255,255,0.1)' }}></div>
                             <Link to="/dashboard" title="Go to Dashboard" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
@@ -67,14 +67,14 @@ const Navbar = () => {
                                     {user.username ? user.username.charAt(0).toUpperCase() : <User size={18} />}
                                 </div>
                             </Link>
-                            <button 
+                            <button
                                 onClick={() => {
-                                    if(window.confirm('Are you sure you want to logout?')) {
+                                    if (window.confirm('Are you sure you want to logout?')) {
                                         logout();
                                     }
-                                }} 
+                                }}
                                 title="Logout"
-                                className="btn-ghost" 
+                                className="btn-ghost"
                                 style={{ padding: '0.5rem', color: 'var(--color-text-muted)' }}
                             >
                                 <LogOut size={20} />
@@ -102,7 +102,7 @@ const Navbar = () => {
             {/* Mobile Menu */}
             <AnimatePresence>
                 {mobileMenuOpen && (
-                    <motion.div 
+                    <motion.div
                         initial={{ opacity: 0, height: 0 }}
                         animate={{ opacity: 1, height: 'auto' }}
                         exit={{ opacity: 0, height: 0 }}
@@ -116,16 +116,16 @@ const Navbar = () => {
                             {user ? (
                                 <>
                                     <Link to="/create-post" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}><PenSquare size={18} /> Write</Link>
-                                    {user.role === 'admin' && (
-                                        <Link to="/admin" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#22c55e' }}>Admin Panel</Link>
+                                    {(user.role === 'admin' || user.role === 'owner') && (
+                                        <Link to="/admin" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: user.role === 'owner' ? '#a855f7' : '#22c55e' }}>{user.role === 'owner' ? 'Owner Panel' : 'Admin Panel'}</Link>
                                     )}
                                     <Link to="/dashboard" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}><User size={18} /> Dashboard</Link>
-                                    <button 
+                                    <button
                                         onClick={() => {
-                                            if(window.confirm('Are you sure you want to logout?')) {
+                                            if (window.confirm('Are you sure you want to logout?')) {
                                                 logout();
                                             }
-                                        }} 
+                                        }}
                                         style={{ background: 'none', border: 'none', color: 'var(--color-error)', textAlign: 'left', fontWeight: 500, cursor: 'pointer', padding: 0 }}
                                     >
                                         Logout
