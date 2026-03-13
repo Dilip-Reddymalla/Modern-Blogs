@@ -30,6 +30,9 @@ const Login = () => {
       const response = await api.post("/auth/login", formData);
       if (response.data && response.data.user) {
         login(response.data.user);
+        if (response.data.token) {
+          localStorage.setItem("userToken", response.data.token);
+        }
         toast.success("Login Successful!");
         navigate("/dashboard");
       }
